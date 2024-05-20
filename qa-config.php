@@ -34,10 +34,10 @@
 	define('QA_MYSQL_PORT', '3306');
 */
 
-	define('QA_MYSQL_HOSTNAME', '127.0.0.1');
-	define('QA_MYSQL_USERNAME', 'u3sgbunvmumg8v');
-	define('QA_MYSQL_PASSWORD', 'p69bcb6c0f1ac0c566ce57ca1a2bb5a26af0b5bb4282c00501704f4146abb0187');
-	define('QA_MYSQL_DATABASE', 'd13mudqm2cp1qs');
+	define('QA_MYSQL_HOSTNAME', 'arfo8ynm6olw6vpn.cbetxkdyhwsb.us-east-1.rds.amazonaws.com');
+	define('QA_MYSQL_USERNAME', 'xw3h1uei4cpomcl5');
+	define('QA_MYSQL_PASSWORD', 'zbj2w3m4p24w44yy');
+	define('QA_MYSQL_DATABASE', 'clqs8k0bh56ukvj1');
 
 /*
 	Ultra-concise installation instructions:
