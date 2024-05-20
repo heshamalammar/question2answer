@@ -34,7 +34,8 @@
 	define('QA_MYSQL_PORT', '3306');
 */
 
-	define('QA_MYSQL_HOSTNAME', '127.0.0.1');
+	define('QA_MYSQL_HOSTNAME', 'c7gljno857ucsl.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com
+');
 	define('QA_MYSQL_USERNAME', 'your-mysql-username');
 	define('QA_MYSQL_PASSWORD', 'your-mysql-password');
 	define('QA_MYSQL_DATABASE', 'your-mysql-db-name');
