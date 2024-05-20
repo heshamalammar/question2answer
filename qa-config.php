@@ -34,7 +34,7 @@
 	define('QA_MYSQL_PORT', '3306');
 */
 
-	define('QA_MYSQL_HOSTNAME', '127.0.0.1');
+	define('QA_MYSQL_HOSTNAME', 'https://science-bird-df9ddcc7851c.herokuapp.com/');
 	define('QA_MYSQL_USERNAME', 'your-mysql-username');
 	define('QA_MYSQL_PASSWORD', 'your-mysql-password');
 	define('QA_MYSQL_DATABASE', 'your-mysql-db-name');
