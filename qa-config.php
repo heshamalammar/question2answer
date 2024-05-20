@@ -37,7 +37,7 @@
 	define('QA_MYSQL_HOSTNAME', '127.0.0.1');
 	define('QA_MYSQL_USERNAME', 'your-mysql-username');
 	define('QA_MYSQL_PASSWORD', 'your-mysql-password');
-	define('QA_MYSQL_DATABASE', 'science-bird');
+	define('QA_MYSQL_DATABASE', 'd13mudqm2cp1qs');
 
 /*
 	Ultra-concise installation instructions:
