@@ -35,9 +35,9 @@
 */
 
 	define('QA_MYSQL_HOSTNAME', 'https://science-bird-df9ddcc7851c.herokuapp.com/');
-	define('QA_MYSQL_USERNAME', 'u3sgbunvmumg8v');
-	define('QA_MYSQL_PASSWORD', 'p69bcb6c0f1ac0c566ce57ca1a2bb5a26af0b5bb4282c00501704f4146abb0187');
-	define('QA_MYSQL_DATABASE', 'd13mudqm2cp1qs');
+	define('QA_MYSQL_USERNAME', 'your-mysql-username');
+	define('QA_MYSQL_PASSWORD', 'your-mysql-password');
+	define('QA_MYSQL_DATABASE', 'your-mysql-db-name');
 /*
 	Ultra-concise installation instructions:
 
