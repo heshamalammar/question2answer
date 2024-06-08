@@ -25,3 +25,4 @@ A clear and concise description of what you expected to happen.
  - MySQL version: 
  - Q2A version: 
  - Browser:
+
