@@ -1,28 +1,6 @@
-/*
-	Question2Answer by Gideon Greenspan and contributors
-	http://www.question2answer.org/
-
-	File: qa-content/qa-question.js
-	Description: THIS FILE HAS BEEN DEPRECATED IN FAVOUR OF qa-global.js
-
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	More about this license: http://www.question2answer.org/license.php
-*/
-
 var qa_element_revealed = null;
 
-function qa_toggle_element(elem)
-{
+function qa_toggle_element(elem) {
 	var e = elem ? document.getElementById(elem) : null;
 
 	if (e && e.qa_disabled)
@@ -45,7 +23,7 @@ function qa_toggle_element(elem)
 			if (e.qa_show)
 				e.qa_show();
 
-			qa_reveal(e, 'form', function() {
+			qa_reveal(e, 'form', function () {
 				var t = $(e).offset().top;
 				var h = $(e).height() + 16;
 				var wt = $(window).scrollTop();
@@ -67,14 +45,13 @@ function qa_toggle_element(elem)
 	return !(e || !elem); // failed to find item
 }
 
-function qa_submit_answer(questionid, elem)
-{
+function qa_submit_answer(questionid, elem) {
 	var params = qa_form_params('a_form');
 
 	params.a_questionid = questionid;
 
 	qa_ajax_post('answer', params,
-		function(lines) {
+		function (lines) {
 			if (lines[0] == '1') {
 				if (lines[1] < 1) {
 					var b = document.getElementById('q_doanswer');
@@ -115,15 +92,14 @@ function qa_submit_answer(questionid, elem)
 	return false;
 }
 
-function qa_submit_comment(questionid, parentid, elem)
-{
+function qa_submit_comment(questionid, parentid, elem) {
 	var params = qa_form_params('c_form_' + parentid);
 
 	params.c_questionid = questionid;
 	params.c_parentid = parentid;
 
 	qa_ajax_post('comment', params,
-		function(lines) {
+		function (lines) {
 
 			if (lines[0] == '1') {
 				var l = document.getElementById('c' + parentid + '_list');
@@ -156,8 +132,7 @@ function qa_submit_comment(questionid, parentid, elem)
 	return false;
 }
 
-function qa_answer_click(answerid, questionid, target)
-{
+function qa_answer_click(answerid, questionid, target) {
 	var params = {};
 
 	params.answerid = answerid;
@@ -166,7 +141,7 @@ function qa_answer_click(answerid, questionid, target)
 	params[target.name] = target.value;
 
 	qa_ajax_post('click_a', params,
-		function(lines) {
+		function (lines) {
 			if (lines[0] == '1') {
 				qa_set_inner_html(document.getElementById('a_list_title'), 'a_list_title', lines[1]);
 
@@ -190,8 +165,7 @@ function qa_answer_click(answerid, questionid, target)
 	return false;
 }
 
-function qa_comment_click(commentid, questionid, parentid, target)
-{
+function qa_comment_click(commentid, questionid, parentid, target) {
 	var params = {};
 
 	params.commentid = commentid;
@@ -201,7 +175,7 @@ function qa_comment_click(commentid, questionid, parentid, target)
 	params[target.name] = target.value;
 
 	qa_ajax_post('click_c', params,
-		function(lines) {
+		function (lines) {
 			if (lines[0] == '1') {
 				var l = document.getElementById('c' + commentid);
 				var h = lines.slice(1).join("\n");
@@ -223,15 +197,14 @@ function qa_comment_click(commentid, questionid, parentid, target)
 	return false;
 }
 
-function qa_show_comments(questionid, parentid, elem)
-{
+function qa_show_comments(questionid, parentid, elem) {
 	var params = {};
 
 	params.c_questionid = questionid;
 	params.c_parentid = parentid;
 
 	qa_ajax_post('show_cs', params,
-		function(lines) {
+		function (lines) {
 			if (lines[0] == '1') {
 				var l = document.getElementById('c' + parentid + '_list');
 				l.innerHTML = lines.slice(1).join("\n");
@@ -249,8 +222,7 @@ function qa_show_comments(questionid, parentid, elem)
 	return false;
 }
 
-function qa_form_params(formname)
-{
+function qa_form_params(formname) {
 	var es = document.forms[formname].elements;
 	var params = {};
 
@@ -265,7 +237,8 @@ function qa_form_params(formname)
 	return params;
 }
 
-function qa_scroll_page_to(scroll)
-{
-	$('html,body').animate({scrollTop: scroll}, 400);
+function qa_scroll_page_to(scroll) {
+	$('html,body').animate({
+		scrollTop: scroll
+	}, 400);
 }

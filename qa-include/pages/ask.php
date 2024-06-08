@@ -1,23 +1,4 @@
 <?php
-/*
-	Question2Answer by Gideon Greenspan and contributors
-	http://www.question2answer.org/
-
-	Description: Controller for ask a question page
-
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	More about this license: http://www.question2answer.org/license.php
-*/
 
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../../');
@@ -25,10 +6,10 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 }
 
 
-require_once QA_INCLUDE_DIR.'app/format.php';
-require_once QA_INCLUDE_DIR.'app/limits.php';
-require_once QA_INCLUDE_DIR.'db/selects.php';
-require_once QA_INCLUDE_DIR.'util/sort.php';
+require_once QA_INCLUDE_DIR . 'app/format.php';
+require_once QA_INCLUDE_DIR . 'app/limits.php';
+require_once QA_INCLUDE_DIR . 'db/selects.php';
+require_once QA_INCLUDE_DIR . 'util/sort.php';
 
 
 // Check whether this is a follow-on question and get some info we need from the database
@@ -107,8 +88,8 @@ if (qa_using_tags()) {
 $errors = array();
 
 if (qa_clicked('doask')) {
-	require_once QA_INCLUDE_DIR.'app/post-create.php';
-	require_once QA_INCLUDE_DIR.'util/string.php';
+	require_once QA_INCLUDE_DIR . 'app/post-create.php';
+	require_once QA_INCLUDE_DIR . 'util/string.php';
 
 	$categoryids = array_keys(qa_category_path($categories, @$in['categoryid']));
 	$userlevel = qa_user_level_for_categories($categoryids);
@@ -123,8 +104,7 @@ if (qa_clicked('doask')) {
 
 	if (!qa_check_form_security_code('ask', qa_post_text('code'))) {
 		$errors['page'] = qa_lang_html('misc/form_security_again');
-	}
-	else {
+	} else {
 		$filtermodules = qa_load_modules_with('filter', 'filter_question');
 		foreach ($filtermodules as $filtermodule) {
 			$oldin = $in;
@@ -135,13 +115,12 @@ if (qa_clicked('doask')) {
 		if (qa_using_categories() && count($categories) && (!qa_opt('allow_no_category')) && !isset($in['categoryid'])) {
 			// check this here because we need to know count($categories)
 			$errors['categoryid'] = qa_lang_html('question/category_required');
-		}
-		elseif (qa_user_permit_error('permit_post_q', null, $userlevel)) {
+		} elseif (qa_user_permit_error('permit_post_q', null, $userlevel)) {
 			$errors['categoryid'] = qa_lang_html('question/category_ask_not_allowed');
 		}
 
 		if ($captchareason) {
-			require_once QA_INCLUDE_DIR.'app/captcha.php';
+			require_once QA_INCLUDE_DIR . 'app/captcha.php';
 			qa_captcha_validate_post($errors);
 		}
 
@@ -167,9 +146,23 @@ if (qa_clicked('doask')) {
 		if (empty($errors)) {
 			$cookieid = isset($userid) ? qa_cookie_get() : qa_cookie_get_create(); // create a new cookie if necessary
 
-			$questionid = qa_question_create($followanswer, $userid, qa_get_logged_in_handle(), $cookieid,
-				$in['title'], $in['content'], $in['format'], $in['text'], isset($in['tags']) ? qa_tags_to_tagstring($in['tags']) : '',
-				$in['notify'], $in['email'], $in['categoryid'], $in['extra'], $in['queued'], $in['name']);
+			$questionid = qa_question_create(
+				$followanswer,
+				$userid,
+				qa_get_logged_in_handle(),
+				$cookieid,
+				$in['title'],
+				$in['content'],
+				$in['format'],
+				$in['text'],
+				isset($in['tags']) ? qa_tags_to_tagstring($in['tags']) : '',
+				$in['notify'],
+				$in['email'],
+				$in['categoryid'],
+				$in['extra'],
+				$in['queued'],
+				$in['name']
+			);
 
 			qa_redirect(qa_q_request($questionid, $in['title'])); // our work is done here
 		}
@@ -194,7 +187,7 @@ $field['error'] = qa_html(isset($errors['content']) ? $errors['content'] : null)
 $custom = qa_opt('show_custom_ask') ? trim(qa_opt('custom_ask')) : '';
 
 $qa_content['form'] = array(
-	'tags' => 'name="ask" method="post" action="'.qa_self_html().'"',
+	'tags' => 'name="ask" method="post" action="' . qa_self_html() . '"',
 
 	'style' => 'tall',
 
@@ -221,8 +214,8 @@ $qa_content['form'] = array(
 
 	'buttons' => array(
 		'ask' => array(
-			'tags' => 'onclick="qa_show_waiting_after(this, false); '.
-				(method_exists($editor, 'update_script') ? $editor->update_script('content') : '').'"',
+			'tags' => 'onclick="qa_show_waiting_after(this, false); ' .
+				(method_exists($editor, 'update_script') ? $editor->update_script('content') : '') . '"',
 			'label' => qa_lang_html('question/ask_button'),
 		),
 	),
@@ -242,7 +235,7 @@ if (qa_opt('do_ask_check_qs') || qa_opt('do_example_tags')) {
 	$qa_content['form']['fields']['title']['tags'] .= ' onchange="qa_title_change(this.value);"';
 
 	if (strlen($in['title'] ?? '')) {
-		$qa_content['script_onloads'][] = 'qa_title_change('.qa_js($in['title']).');';
+		$qa_content['script_onloads'][] = 'qa_title_change(' . qa_js($in['title']) . ');';
 	}
 }
 
@@ -288,8 +281,15 @@ if (qa_using_tags()) {
 		'error' => qa_html(isset($errors['tags']) ? $errors['tags'] : null),
 	);
 
-	qa_set_up_tag_field($qa_content, $field, 'tags', isset($in['tags']) ? $in['tags'] : array(), array(),
-		qa_opt('do_complete_tags') ? array_keys($completetags) : array(), qa_opt('page_size_ask_tags'));
+	qa_set_up_tag_field(
+		$qa_content,
+		$field,
+		'tags',
+		isset($in['tags']) ? $in['tags'] : array(),
+		array(),
+		qa_opt('do_complete_tags') ? array_keys($completetags) : array(),
+		qa_opt('page_size_ask_tags')
+	);
 
 	qa_array_insert($qa_content['form']['fields'], null, array('tags' => $field));
 }
@@ -298,11 +298,18 @@ if (!isset($userid) && qa_opt('allow_anonymous_naming')) {
 	qa_set_up_name_field($qa_content, $qa_content['form']['fields'], @$in['name']);
 }
 
-qa_set_up_notify_fields($qa_content, $qa_content['form']['fields'], 'Q', qa_get_logged_in_email(),
-	isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], isset($errors['email']) ? $errors['email'] : null);
+qa_set_up_notify_fields(
+	$qa_content,
+	$qa_content['form']['fields'],
+	'Q',
+	qa_get_logged_in_email(),
+	isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'),
+	@$in['email'],
+	isset($errors['email']) ? $errors['email'] : null
+);
 
 if ($captchareason) {
-	require_once QA_INCLUDE_DIR.'app/captcha.php';
+	require_once QA_INCLUDE_DIR . 'app/captcha.php';
 	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], $errors, qa_captcha_reason_note($captchareason));
 }
 

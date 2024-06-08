@@ -1,23 +1,4 @@
 <?php
-/*
-	Question2Answer by Gideon Greenspan and contributors
-	http://www.question2answer.org/
-
-	Description: Controller for page listing categories
-
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	More about this license: http://www.question2answer.org/license.php
-*/
 
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../../');
@@ -66,10 +47,10 @@ function qa_category_nav_to_browse(&$navigation, $categories, $categoryid, $favo
 		}
 
 		$navigation[$key]['note'] =
-			' - <a href="'.qa_path_html('questions/'.implode('/', array_reverse(explode('/', $category['backpath'])))).'">'.( ($category['qcount']==1)
+			' - <a href="' . qa_path_html('questions/' . implode('/', array_reverse(explode('/', $category['backpath'])))) . '">' . (($category['qcount'] == 1)
 				? qa_lang_html_sub('main/1_question', '1', '1')
 				: qa_lang_html_sub('main/x_questions', number_format($category['qcount']))
-			).'</a>';
+			) . '</a>';
 
 		if (strlen($category['content']))
 			$navigation[$key]['note'] .= qa_html(' - ' . $category['content']);
@@ -104,7 +85,6 @@ if (count($categories)) {
 		'nav' => $navigation,
 		'type' => 'browse-cat',
 	);
-
 } else {
 	$qa_content['title'] = qa_lang_html('main/no_categories_found');
 	$qa_content['suggest_next'] = qa_html_suggest_qs_tags(qa_using_tags());

@@ -1,23 +1,4 @@
 <?php
-/*
-	Question2Answer by Gideon Greenspan and contributors
-	http://www.question2answer.org/
-
-	Description: Database functions for creating a question, answer or comment
-
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	More about this license: http://www.question2answer.org/license.php
-*/
 
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../../');
@@ -45,8 +26,19 @@ function qa_db_post_create($type, $parentid, $userid, $cookieid, $ip, $title, $c
 {
 	qa_db_query_sub(
 		'INSERT INTO ^posts (categoryid, type, parentid, userid, cookieid, createip, title, content, format, tags, notify, name, created) ' .
-		'VALUES (#, $, #, $, #, UNHEX($), $, $, $, $, $, $, NOW())',
-		$categoryid, $type, $parentid, $userid, $cookieid, bin2hex(@inet_pton($ip)), $title, $content, $format, $tagstring, $notify, $name
+			'VALUES (#, $, #, $, #, UNHEX($), $, $, $, $, $, $, NOW())',
+		$categoryid,
+		$type,
+		$parentid,
+		$userid,
+		$cookieid,
+		bin2hex(@inet_pton($ip)),
+		$title,
+		$content,
+		$format,
+		$tagstring,
+		$notify,
+		$name
 	);
 
 	return qa_db_last_insert_id();
@@ -65,11 +57,12 @@ function qa_db_posts_calc_category_path($firstpostid, $lastpostid = null)
 
 	qa_db_query_sub(
 		"UPDATE ^posts AS x, (SELECT ^posts.postid, " .
-		"COALESCE(parent2.parentid, parent1.parentid, parent0.parentid, parent0.categoryid) AS catidpath1, " .
-		"IF (parent2.parentid IS NOT NULL, parent1.parentid, IF (parent1.parentid IS NOT NULL, parent0.parentid, IF (parent0.parentid IS NOT NULL, parent0.categoryid, NULL))) AS catidpath2, " .
-		"IF (parent2.parentid IS NOT NULL, parent0.parentid, IF (parent1.parentid IS NOT NULL, parent0.categoryid, NULL)) AS catidpath3 " .
-		"FROM ^posts LEFT JOIN ^categories AS parent0 ON ^posts.categoryid=parent0.categoryid LEFT JOIN ^categories AS parent1 ON parent0.parentid=parent1.categoryid LEFT JOIN ^categories AS parent2 ON parent1.parentid=parent2.categoryid WHERE ^posts.postid BETWEEN # AND #) AS a SET x.catidpath1=a.catidpath1, x.catidpath2=a.catidpath2, x.catidpath3=a.catidpath3 WHERE x.postid=a.postid",
-		$firstpostid, $lastpostid
+			"COALESCE(parent2.parentid, parent1.parentid, parent0.parentid, parent0.categoryid) AS catidpath1, " .
+			"IF (parent2.parentid IS NOT NULL, parent1.parentid, IF (parent1.parentid IS NOT NULL, parent0.parentid, IF (parent0.parentid IS NOT NULL, parent0.categoryid, NULL))) AS catidpath2, " .
+			"IF (parent2.parentid IS NOT NULL, parent0.parentid, IF (parent1.parentid IS NOT NULL, parent0.categoryid, NULL)) AS catidpath3 " .
+			"FROM ^posts LEFT JOIN ^categories AS parent0 ON ^posts.categoryid=parent0.categoryid LEFT JOIN ^categories AS parent1 ON parent0.parentid=parent1.categoryid LEFT JOIN ^categories AS parent2 ON parent1.parentid=parent2.categoryid WHERE ^posts.postid BETWEEN # AND #) AS a SET x.catidpath1=a.catidpath1, x.catidpath2=a.catidpath2, x.catidpath3=a.catidpath3 WHERE x.postid=a.postid",
+		$firstpostid,
+		$lastpostid
 	); // requires QA_CATEGORY_DEPTH=4
 }
 
@@ -128,8 +121,9 @@ function qa_db_generic_cache_update_for_q($postId, $field, $countQuery, $value =
 
 	$sql = sprintf(
 		'UPDATE ^posts SET %s = # %s' .
-		'WHERE postid = #',
-		$field, $sqlValue
+			'WHERE postid = #',
+		$field,
+		$sqlValue
 	);
 
 	qa_db_query_sub($sql, $newValue, $postId);
@@ -147,7 +141,7 @@ function qa_db_acount_update_for_q($questionid, $increment = null)
 		$questionid,
 		'acount',
 		'SELECT COUNT(*) FROM ^posts ' .
-		'WHERE parentid = # AND type = "A"',
+			'WHERE parentid = # AND type = "A"',
 		$increment
 	);
 }
@@ -165,7 +159,7 @@ function qa_db_amaxvote_update_for_q($questionid, $value = null, $relative = tru
 		$questionid,
 		'amaxvote',
 		'SELECT COALESCE(GREATEST(MAX(netvotes), 0), 0) FROM ^posts ' .
-		'WHERE parentid = # AND type = "A"',
+			'WHERE parentid = # AND type = "A"',
 		$value,
 		$relative
 	);
@@ -200,14 +194,14 @@ function qa_db_post_update_acount($questionid, $increment = null)
 		$questionid,
 		'acount',
 		'SELECT COUNT(*) acount FROM ^posts ' .
-		'WHERE parentid = # AND type = "A"',
+			'WHERE parentid = # AND type = "A"',
 		$increment
 	);
 	qa_db_generic_cache_update_for_q(
 		$questionid,
 		'amaxvote',
 		'SELECT COALESCE(GREATEST(MAX(netvotes), 0), 0) amaxvote FROM ^posts ' .
-		'WHERE parentid = # AND type = "A"',
+			'WHERE parentid = # AND type = "A"',
 		$increment
 	);
 }
@@ -224,7 +218,11 @@ function qa_db_ifcategory_qcount_update($categoryid)
 
 		qa_db_query_sub(
 			"UPDATE ^categories SET qcount=GREATEST( (SELECT COUNT(*) FROM ^posts WHERE categoryid=# AND type='Q'), (SELECT COUNT(*) FROM ^posts WHERE catidpath1=# AND type='Q'), (SELECT COUNT(*) FROM ^posts WHERE catidpath2=# AND type='Q'), (SELECT COUNT(*) FROM ^posts WHERE catidpath3=# AND type='Q') ) WHERE categoryid=#",
-			$categoryid, $categoryid, $categoryid, $categoryid, $categoryid
+			$categoryid,
+			$categoryid,
+			$categoryid,
+			$categoryid,
+			$categoryid
 		); // requires QA_CATEGORY_DEPTH=4
 	}
 }
@@ -308,7 +306,8 @@ function qa_db_posttags_add_post_wordids($postid, $wordids)
 	if (count($wordids)) {
 		qa_db_query_sub(
 			'INSERT INTO ^posttags (postid, wordid, postcreated) SELECT postid, wordid, created FROM ^words, ^posts WHERE postid=# AND wordid IN ($)',
-			$postid, $wordids
+			$postid,
+			$wordids
 		);
 	}
 }
@@ -323,7 +322,8 @@ function qa_db_word_mapto_ids($words)
 {
 	if (count($words)) {
 		return qa_db_read_all_assoc(qa_db_query_sub(
-			'SELECT wordid, word FROM ^words WHERE word IN ($)', $words
+			'SELECT wordid, word FROM ^words WHERE word IN ($)',
+			$words
 		), 'word', 'wordid');
 	}
 
@@ -436,7 +436,7 @@ function qa_db_qcount_update($increment = null)
 	qa_db_generic_cache_update(
 		'cache_qcount',
 		'SELECT COUNT(*) FROM ^posts ' .
-		'WHERE type = "Q"',
+			'WHERE type = "Q"',
 		$increment
 	);
 }
@@ -451,7 +451,7 @@ function qa_db_acount_update($increment = null)
 	qa_db_generic_cache_update(
 		'cache_acount',
 		'SELECT COUNT(*) FROM ^posts ' .
-		'WHERE type = "A"',
+			'WHERE type = "A"',
 		$increment
 	);
 }
@@ -466,7 +466,7 @@ function qa_db_ccount_update($increment = null)
 	qa_db_generic_cache_update(
 		'cache_ccount',
 		'SELECT COUNT(*) FROM ^posts ' .
-		'WHERE type = "C"',
+			'WHERE type = "C"',
 		$increment
 	);
 }
@@ -481,8 +481,8 @@ function qa_db_tagcount_update()
 		$cachedValue = qa_db_read_one_value(qa_db_query_sub('SELECT COUNT(*) FROM ^words WHERE tagcount > 0'));
 		qa_db_query_sub(
 			"INSERT INTO ^options (title, content) " .
-			"VALUES ('cache_tagcount', #) " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)",
+				"VALUES ('cache_tagcount', #) " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)",
 			$cachedValue
 		);
 	}
@@ -497,7 +497,7 @@ function qa_db_unaqcount_update($increment = null)
 	qa_db_generic_cache_update(
 		'cache_unaqcount',
 		'SELECT COUNT(*) FROM ^posts ' .
-		'WHERE type = "Q" AND acount = 0 AND closedbyid IS NULL',
+			'WHERE type = "Q" AND acount = 0 AND closedbyid IS NULL',
 		$increment
 	);
 }
@@ -511,7 +511,7 @@ function qa_db_unselqcount_update($increment = null)
 	qa_db_generic_cache_update(
 		'cache_unselqcount',
 		'SELECT COUNT(*) FROM ^posts ' .
-		'WHERE type = "Q" AND selchildid IS NULL AND closedbyid IS NULL',
+			'WHERE type = "Q" AND selchildid IS NULL AND closedbyid IS NULL',
 		$increment
 	);
 }
@@ -525,7 +525,7 @@ function qa_db_unupaqcount_update($increment = null)
 	qa_db_generic_cache_update(
 		'cache_unupaqcount',
 		'SELECT COUNT(*) FROM ^posts ' .
-		'WHERE type = "Q" AND amaxvote = 0 AND closedbyid IS NULL',
+			'WHERE type = "Q" AND amaxvote = 0 AND closedbyid IS NULL',
 		$increment
 	);
 }
@@ -540,7 +540,7 @@ function qa_db_queuedcount_update($increment = null)
 	qa_db_generic_cache_update(
 		'cache_queuedcount',
 		'SELECT COUNT(*) FROM ^posts ' .
-		'WHERE type IN ("Q_QUEUED", "A_QUEUED", "C_QUEUED")',
+			'WHERE type IN ("Q_QUEUED", "A_QUEUED", "C_QUEUED")',
 		$increment
 	);
 }

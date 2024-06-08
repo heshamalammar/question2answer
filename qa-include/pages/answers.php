@@ -1,23 +1,4 @@
 <?php
-/*
-	Question2Answer by Gideon Greenspan and contributors
-	http://www.question2answer.org/
-
-	Description: Controller for page listing recent answers on questions
-
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	More about this license: http://www.question2answer.org/license.php
-*/
 
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../../');
@@ -49,7 +30,6 @@ if ($countslugs) {
 	$categorytitlehtml = qa_html($categories[$categoryid]['title']);
 	$sometitle = qa_lang_html_sub('main/recent_as_in_x', $categorytitlehtml);
 	$nonetitle = qa_lang_html_sub('main/no_answers_in_x', $categorytitlehtml);
-
 } else {
 	$sometitle = qa_lang_html('main/recent_as_title');
 	$nonetitle = qa_lang_html('main/no_answers_found');
